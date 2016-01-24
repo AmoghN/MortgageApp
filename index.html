@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  	<link rel="stylesheet" type="text/css" href="css/main.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">    
+    <title>Mortgage Rates Angualar </title>
+  </head>
+  <body class="container">
+    <div class="wrapper" ng-app="app" ng-controller="inputData">
+    	<div ng-show="formError" ng-repeat="error in formErrorActive track by $index">
+    		<div class="alert alert-danger" ng-bind="error"></div>    		
+    	</div>
+      <form name="mainForm">
+      	<div class="col-xs-4 form-group" ng-init="mortageAmount = 200000">
+  			<label>Mortgage Amount:</label>
+  			<div class="input-group">
+  			<div class="input-group-addon" ng-class="formErrorName[0].tag">$</div>
+  			<input type="text" fcsa-number class="form-control" ng-model="mortageAmount" > 
+  			</div> 					
+		</div>
+		<div class="col-xs-4 form-group" ng-init="interestTerm = 25">
+  			<label>Interest Term:</label>
+  			<div class="input-group">
+  			<input type="text" fcsa-number class="form-control" ng-model="interestTerm" >
+  			<div class="input-group-addon" ng-class="formErrorName[1].tag">Years</div> 
+  			</div> 					
+		</div>
+		<div class="col-xs-4 form-group" ng-init="interestRate = 2.99">
+          	<label>Interest Rate:</label>
+          	<div class="input-group">
+          	<input type="text"  class="form-control" ng-model="interestRate">
+          	<div class="input-group-addon" ng-class="formErrorName[2].tag">%</div>
+  			</div>
+  		</div>        
+        <div class="fields" >
+          <label> Payment Frequency: </label>
+          <select ng-model="paymentFrequency">
+            <option value="0">Monthly</option>
+            <option value="2">Bi-Weekly</option>
+            <option value="1">Weekly</option>            
+          </select>
+          <input type="submit" value="Calculate" class="btn btn-default" style="margin: 5px 0px 5px 10px;" ng-click="validate();">
+        </div>
+      </form>
+      <div>
+        <table class="table table-striped">
+          <tr>
+            <th>Payment Frequency</th>
+            <th>Payment Amount</th>
+            <th>Total Interest Amount</th>
+            <th>Amortization Period</th>
+          </tr>
+          <tr ng-repeat="freq in paymentMethods | orderBy:'term'">
+            <td ng-class = "freq.Styleclass" ng-bind="freq.period"></td>
+            <td ng-class = "freq.Styleclass" ng-bind="freq.paymentAmount | currency "></td>
+            <td ng-class = "freq.Styleclass" ng-bind="freq.paymentInterest | currency"></td>
+            <td ng-class = "freq.Styleclass" ng-bind="freq.actualAmorization[0] + ' Y ' +  (freq.actualAmorization[1] != 0 ? freq.actualAmorization[1] + ' M' : '')"></td>
+          </tr>
+        </table>
+        <div style="text-align: center;">
+        	<div class="btn" ng-click="tab = 1; table ='btn-primary'; graph ='btn-default'" ng-init="table = disable" ng-class="table">Chart</div>
+        	<div class="btn" ng-click="tab = 2; table ='btn-default'; graph ='btn-primary'" ng-init="graph = disable" ng-class="graph">Graph</div>
+        </div>
+        <div ng-show="tab == 1" style="margin-top: 10px;">
+        <strong> Full Amortization Table </strong>
+        <div class="frame" >
+        <table class="table table-striped">
+          <tr class="tableHeader">
+            <th>Payment #</th>
+            <th ng-bind="frequency + ' Payment'"></th>
+            <th>Principal</th>
+            <th>Interest</th>
+            <th>Money Remaining </th>
+          </tr>
+          <tr ng-repeat="payment in input track by $index">
+          	<td ng-bind="payment.payment"></td>
+          	<td ng-bind="payment.paymentAmount | currency"></td>
+          	<td ng-bind="payment.principal | currency"></td>
+          	<td ng-bind="payment.interestAmount | currency"></td>
+          	<td ng-bind="payment.moneyRemaining | currency"></td>	
+          </tr>
+        </table>
+        </div>
+        </div>
+        <div ng-show="tab == 2" style="margin-top: 10px;">
+        	<strong>Amortization Graph: Yearly Outstanding Balance </strong>
+        	<canvas id="income" width="550" height="400"></canvas>
+        </div>
+      </div>     
+    </div>    
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+    <script type="text/javascript" src="js/angular-fcsa-number.js"></script>      
+    <script type="text/javascript" src="js/Chart.js"></script>
+    <script type="text/javascript" src="js/module.js"></script>    
+  </body>
+</html>
