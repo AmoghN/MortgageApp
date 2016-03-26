@@ -112,25 +112,30 @@ app.controller('inputData', function($scope) {
       moneyRemaining: $scope.mortageAmount,
       interestRate: Math.pow(1 + $scope.actualInterestRate, 1 / $scope.paymentMethods[$scope.paymentFrequency].term) - 1
     };
-    // creating json for amortization table
-    var data = "[" + angular.toJson(info);
-    while (info.moneyRemaining > info.paymentAmount) {
+    // creating data for amortization table
+    var data = []
+    while (info.moneyRemaining) {
+      
       info.payment += 1;
       info.interestAmount = info.moneyRemaining * info.interestRate;
-      info.principal = info.paymentAmount - info.interestAmount;
-      info.moneyRemaining -= info.principal;
-      data += "," + angular.toJson(info);
-    }
-    if(info.moneyRemaining != 0){
-      info.paymentAmount = info.moneyRemaining;
-      info.payment += 1;
-      info.interestAmount = info.moneyRemaining * info.interestRate;
-      info.principal = info.paymentAmount - info.interestAmount;
-      info.moneyRemaining = 0;
-      data += "," + angular.toJson(info);
-    }
-    data += "]";
-    $scope.input = JSON.parse(data);
+      if(info.moneyRemaining - info.paymentAmount < 0){
+         info.paymentAmount = info.moneyRemaining;
+         info.principal = info.paymentAmount - info.interestAmount;
+         info.moneyRemaining = 0;
+      }else{
+         info.principal = info.paymentAmount - info.interestAmount;
+         info.moneyRemaining -= info.principal;
+     }
+
+      value = {}
+      value.payment = info.payment;
+      value.paymentAmount = info.paymentAmount;
+      value.interestAmount = info.interestAmount;
+      value.principal = info.principal;
+      value.moneyRemaining = info.moneyRemaining;
+      data.push(value);
+    }    
+    $scope.amortizationTableData = data;
   };
 
   // drawing graph on canvas

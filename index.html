@@ -1,7 +1,10 @@
 <!DOCTYPE html>
 <html>
   <head>
-  	<link rel="stylesheet" type="text/css" href="css/main.css">
+    <meta content='width=device-width', initial-scale=1, user-scalable=0, name='viewport'>
+    <meta name="author" content="Amogh Nayak">
+    <meta name="description" content="Angular Mortgage App">
+    <link rel="stylesheet" type="text/css" href="css/main.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">    
     <title>Mortgage Rates Angualar </title>
   </head>
@@ -72,7 +75,7 @@
             <th>Interest</th>
             <th>Money Remaining </th>
           </tr>
-          <tr ng-repeat="payment in input track by $index">
+          <tr ng-repeat="payment in amortizationTableData track by $index">
           	<td ng-bind="payment.payment"></td>
           	<td ng-bind="payment.paymentAmount | currency"></td>
           	<td ng-bind="payment.principal | currency"></td>
